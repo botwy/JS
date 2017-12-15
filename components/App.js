@@ -45,7 +45,7 @@ const style = StyleSheet.create({
 });
 //---------------------------------------
 const Square = (props)=>(
-    <TouchableOpacity onPress={ ()=>props.onClick }>
+    <TouchableOpacity onPress={ props.onClick }>
     <View style={style.square}>
     <Text style={{color:'black'}}>{props.value}</Text>
     </View>
