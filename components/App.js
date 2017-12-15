@@ -1,17 +1,58 @@
 /**
  * Created by batmah on 16.10.16.
  */
+'use strict';
 import React, {Component} from 'react';
+import {
+    StyleSheet,
+    Text,
+    View,
+    TouchableOpacity,
+    ScrollView,
+    TextInput
+} from 'react-native';
+
 import CalculateWinner from './CalculateWinner';
 
+
+
+const style = StyleSheet.create({
+    status: {
+    marginBottom: 10,
+},
+    square: {
+        margin:10,
+    backgroundColor: 'yellow',
+    borderRadius: 10,
+    height: 70,
+    alignItems: 'center',
+    width: 70,
+        flexDirection: 'column',
+
+},
+    game: {
+    flexDirection: 'row',
+},
+
+   gameInfo: {
+    marginTop: 20,
+},
+    boardRow: {
+        flexDirection: 'row',
+}
+
+
+});
 //---------------------------------------
 const Square = (props)=>(
- <button className="square" onClick={ props.onClick }> { props.value } </button>
+    <TouchableOpacity onPress={ ()=>props.onClick }>
+    <View style={style.square}>
+    <Text style={{color:'black'}}>{props.value}</Text>
+    </View>
+    </TouchableOpacity>
 );
 
-Square.propTypes = {
-  onClick: React.PropTypes.func.isRequired
-};
+
 
 //---------------------------------
 class Board extends Component {
@@ -24,32 +65,28 @@ class Board extends Component {
   render() {
 
     return (
-      <div>
-        <div className="status">{status}</div>
-        <div className="board-row">
+        <View style={{marginTop:50, justifyContent: 'center', alignItems:'center'}}>
+
+        <View style={style.boardRow}>
           {this.renderSquare(0)}
           {this.renderSquare(1)}
           {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
+        </View>
+        <View style={style.boardRow}>
           {this.renderSquare(3)}
           {this.renderSquare(4)}
           {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
+        </View>
+        <View style={style.boardRow}>
           {this.renderSquare(6)}
           {this.renderSquare(7)}
           {this.renderSquare(8)}
-        </div>
-      </div>
+        </View>
+      </View>
     );
   }
 }
 
-Board.propTypes = {
-    onClick: React.PropTypes.func.isRequired,
-    squares: React.PropTypes.array.isRequired
-};
 
 //----------------------------------------
 
@@ -93,37 +130,40 @@ class App extends Component {
       if (winner) {
           status = "Победитель: " + winner;
           return (
-              <div className="game-info">
-                  <div>{status}</div>
-                  <a href="#" onClick={ () => this.setState({squares: Array(9).fill(null), NextPlayer: 1}) }>
-                      Начать игру </a>
-              </div>
+              <View style={style.gameInfo}>
+                  <View><Text>{status}</Text></View>
+                  <View><TouchableOpacity onPress={ () => this.setState({squares: Array(9).fill(null), NextPlayer: 1}) }>
+                      <Text>Начать игру</Text></TouchableOpacity>
+                  </View>
+              </View>
           );
       }
       else if (this.state.squares.indexOf(null)===-1 && winner === null ){
           status = "Ничья";
           return (
-              <div className="game-info">
-                  <div>{status}</div>
-                  <div>Если будет 3и ничьи подряд, каждому игроку нужно будет оплатить штраф :-)</div>
-                  <a href="#" onClick={ () => this.setState({squares: Array(9).fill(null), NextPlayer: 1}) }>
-                     Начать игру </a>
-              </div>
+              <View style={style.gameInfo}>
+                  <View style={style.status}><Text>{status}</Text></View>
+                  <View><Text>Если будет 3и ничьи подряд, каждому игроку нужно будет оплатить штраф :-)</Text></View>
+                  <View>
+                  <TouchableOpacity onPress={ () => this.setState({squares: Array(9).fill(null), NextPlayer: 1}) }>
+                      <Text>Начать игру</Text></TouchableOpacity>
+                  </View>
+              </View>
           );
       }else {
           status = "Сейчас играет: " + (this.state.NextPlayer === 1 ? "X" : "O");
           return (
-              <div className="game">
-                  <div className="game-board">
+              <View style={style.game}>
+                  <View>
                       <Board
                           squares={curr_squares}
                           onClick={i => this.clickHandle(i)}
                       />
-                  </div>
-                  <div className="game-info">
-                      <div>{status}</div>
-                  </div>
-              </div>
+                  </View>
+                  <View style={style.gameInfo}>
+                      <View><Text>{status}</Text></View>
+                  </View>
+              </View>
           );
       }
   }
